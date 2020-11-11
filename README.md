@@ -36,7 +36,7 @@ TODO
 with an output:
 
 ```
-* Visiting Page: https://foodwishes.blogspot.com/search
-* Visted 17 pages
-* Word Roasted Roman-Style Romanesco found at page https://foodwishes.blogspot.com/search
+  Visiting Page: https://foodwishes.blogspot.com/search
+  Visted 17 pages
+  Word Roasted Roman-Style Romanesco found at page https://foodwishes.blogspot.com/search
 ```
