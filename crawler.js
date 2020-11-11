@@ -5,7 +5,7 @@ const URL = require('url-parse');
 const { argv } = require('yargs');
 
 const START_URL = argv.site || "https://www.giantbomb.com/";
-const SEARCH_WORD = argv.html || "God of War";
+const SEARCH_WORD = argv.word || "Games";
 const MAX_PAGES_TO_VISIT = argv.max || 10;
 
 const pagesVisited = {};
@@ -46,8 +46,9 @@ const visitPage = (url, cb) => {
         cb();
       }
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(({statusCode}) => {
+      console.log(statusCode);
+      return;
       cb()
     })
 
