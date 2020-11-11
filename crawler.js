@@ -13,18 +13,26 @@ let numPagesVisited = 0;
 const pagesToVisit = [];
 const url = new URL(START_URL);
 const baseUrl = url.protocol + "//" + url.hostname;
+const allAbsoluteLinks = [];
 
 const crawl = () => {
+  let nextPage;
   if (numPagesVisited >= MAX_PAGES_TO_VISIT) {
     console.log(`Max number of pages ${MAX_PAGES_TO_VISIT} reached`);
     return;
   }
   if(pagesToVisit.length === 0) {
-    console.log('No more pages to visit :(');
-    return;
+    if(allAbsoluteLinks.length === 0){
+      console.log('No more pages to visit :(');
+      return;
+    }
+    nextPage = allAbsoluteLinks.pop()
+    //console.log(allAbsoluteLinks)
+  } else {
+  nextPage = pagesToVisit.pop();
+  //console.log(pagesToVisit)
   }
-  let nextPage = pagesToVisit.pop();
-  console.log(pagesToVisit)
+
   if (nextPage in pagesVisited) {
     crawl();
   } else {
@@ -54,6 +62,7 @@ const visitPage = (url, cb) => {
     .catch(({ statusCode }) => {
       if (statusCode >= 400 && statusCode < 500) {
         console.log(statusCode);
+        numPagesVisited--;
       }
       cb()
     })
@@ -69,10 +78,14 @@ const searchForWord = ($, word) => {
 }
 
 const collectInternalLinks = ($) => {
-  var relativeLinks = $("a[href^='/']");
+  const relativeLinks = $("a[href^='/']");
   console.log("Found " + relativeLinks.length + " relative links on page");
   relativeLinks.each(function () {
     pagesToVisit.push(baseUrl + $(this).attr('href'));
+  });
+  const absoluteLinks = $("a[href^='http']");
+  absoluteLinks.each(function() {
+      allAbsoluteLinks.push($(this).attr('href'));
   });
 }
 
