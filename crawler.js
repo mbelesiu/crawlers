@@ -1,5 +1,5 @@
-const fs = require('fs');
 const request = require('request-promise');
+const fs = require('fs');
 const cheerio = require('cheerio');
 const URL = require('url-parse');
 const { argv } = require('yargs');
@@ -21,16 +21,14 @@ const crawl = () => {
     console.log(`Max number of pages ${MAX_PAGES_TO_VISIT} reached`);
     return;
   }
-  if(pagesToVisit.length === 0) {
-    if(allAbsoluteLinks.length === 0){
+  if (pagesToVisit.length === 0) {
+    if (allAbsoluteLinks.length === 0) {
       console.log('No more pages to visit :(');
       return;
     }
     nextPage = allAbsoluteLinks.pop()
-    //console.log(allAbsoluteLinks)
   } else {
-  nextPage = pagesToVisit.pop();
-  //console.log(pagesToVisit)
+    nextPage = pagesToVisit.pop();
   }
 
   if (nextPage in pagesVisited) {
@@ -84,8 +82,8 @@ const collectInternalLinks = ($) => {
     pagesToVisit.push(baseUrl + $(this).attr('href'));
   });
   const absoluteLinks = $("a[href^='http']");
-  absoluteLinks.each(function() {
-      allAbsoluteLinks.push($(this).attr('href'));
+  absoluteLinks.each(function () {
+    allAbsoluteLinks.push($(this).attr('href'));
   });
 }
 
