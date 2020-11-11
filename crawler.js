@@ -19,7 +19,12 @@ const crawl = () => {
     console.log(`Max number of pages ${MAX_PAGES_TO_VISIT} reached`);
     return;
   }
+  if(pagesToVisit.length === 0) {
+    console.log('No more pages to visit :(');
+    return;
+  }
   let nextPage = pagesToVisit.pop();
+  console.log(pagesToVisit)
   if (nextPage in pagesVisited) {
     crawl();
   } else {
@@ -46,9 +51,10 @@ const visitPage = (url, cb) => {
         cb();
       }
     })
-    .catch(({statusCode}) => {
-      console.log(statusCode);
-      return;
+    .catch(({ statusCode }) => {
+      if (statusCode >= 400 && statusCode < 500) {
+        console.log(statusCode);
+      }
       cb()
     })
 
