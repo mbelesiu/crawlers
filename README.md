@@ -8,9 +8,9 @@
 * [Setup](#setup)
 
 ## General info
-This is a web scrapper
+This is my web scrapper.
 
-There are many like it, but this is mine
+There are many like it, but this one is mine.
 	
 ## Technologies
 Project is created with:
