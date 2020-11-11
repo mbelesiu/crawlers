@@ -30,12 +30,13 @@ By Default, crawler will beging at 'https://www.giantbomb.com/' and seach for 'G
 to change these arguments in the cli, add the starting URL after the site option, the word you searching for after word option, and how many pages max you want the web crawler to visit.
 For example
 TODO
-``` node crawler.js --site 'https://foodwishes.blogspot.com/' --word "Roasted Roman-Style Romanesco" --max 100```
+
+``` $node crawler.js --site 'https://foodwishes.blogspot.com/' --word "Roasted Roman-Style Romanesco" --max 100```
 
 with an output:
 
 ```
-Visiting Page: https://foodwishes.blogspot.com/search
-Visted 17 pages
-Word Roasted Roman-Style Romanesco found at page https://foodwishes.blogspot.com/search
+* Visiting Page: https://foodwishes.blogspot.com/search
+* Visted 17 pages
+* Word Roasted Roman-Style Romanesco found at page https://foodwishes.blogspot.com/search
 ```
