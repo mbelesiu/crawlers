@@ -4,12 +4,11 @@ const cheerio = require('cheerio');
 const URL = require('url-parse');
 const { argv } = require('yargs');
 
-const START_URL = argv.site || 'https://www.giantbomb.com/';
-const SEARCH_WORD = argv.html || null;
+const START_URL = argv.site || "https://www.giantbomb.com/";
+const SEARCH_WORD = argv.html || "God of War";
 const MAX_PAGES_TO_VISIT = argv.max || 10;
-const filename = argv.output || '/results/default.txt';
 
-let pagesVisited = {};
+const pagesVisited = {};
 let numPagesVisited = 0;
 const pagesToVisit = [];
 const url = new URL(START_URL);
@@ -21,7 +20,7 @@ const crawl = () => {
     return;
   }
   let nextPage = pagesToVisit.pop();
-  if (nextPage in pageVisited) {
+  if (nextPage in pagesVisited) {
     crawl();
   } else {
     visitPage(nextPage, crawl);
@@ -31,21 +30,26 @@ const crawl = () => {
 //I bet I could use axios instead, but ill give request a spin
 
 const visitPage = (url, cb) => {
-  pageVisited[url] = true;
+  pagesVisited[url] = true;
   numPagesVisited++;
-  console.log(`Visiting Page: ${pageToVisit}`);
+  console.log(`Visiting Page: ${url}`);
+  console.log(`Visted ${numPagesVisited} pages`);
 
-  request(pageToVisit)
-  .then((body) => {
-    const $ = cheerio.load(body);
-    // console.log(`Page title: ${$('title').text()}`);
-    let isWordFound = searchForWord($, SEARCH_WORD);
-    if (isWordFound) {
-      collectInternalLinks($);
-      crawl();
-    }
-  })
-  .catch((err) => cb())
+  request(url)
+    .then((body) => {
+      const $ = cheerio.load(body);
+      let isWordFound = searchForWord($, SEARCH_WORD);
+      if (isWordFound) {
+        console.log('Word ' + SEARCH_WORD + ' found at page ' + url);
+      } else {
+        collectInternalLinks($);
+        cb();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      cb()
+    })
 
 }
 
@@ -58,22 +62,14 @@ const searchForWord = ($, word) => {
 }
 
 const collectInternalLinks = ($) => {
-  const allRelativeLinks = [];
-  const allAbsoluteLinks = [];
-
-  const relativeLinks = $("a[href^='/']");
-  relativeLinks.each(() => {
-    allRelativeLinks.push($(this).attr('href'));
+  var relativeLinks = $("a[href^='/']");
+  console.log("Found " + relativeLinks.length + " relative links on page");
+  relativeLinks.each(function () {
+    pagesToVisit.push(baseUrl + $(this).attr('href'));
   });
-
-  const absoluteLinks = $("a[href^='http']");
-  absoluteLinks.each(() => {
-    allAbsoluteLinks.push($(this).attr('href'));
-  });
-
-  console.log("Found " + allRelativeLinks.length + " relative links");
-  console.log("Found " + allAbsoluteLinks.length + " absolute links");
 }
 
-pageToVisit.push(START_URL);
+pagesToVisit.push(START_URL);
 crawl();
+
+
